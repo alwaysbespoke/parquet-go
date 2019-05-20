@@ -1,0 +1,7 @@
+#folders
+cf/
+datalake/
+
+#files
+*.parquet
+*.DS_Store
