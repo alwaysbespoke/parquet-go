@@ -1,18 +1,22 @@
 package file
 
+import "encoding/binary"
+
 type Column struct {
 	name                  string
 	data                  []byte
 	min                   string
 	max                   string
-	rows                  int
+	rows                  int32
 	totalCompressedSize   int64
 	totalUncompressedSize int64
 	offset                int64
 }
 
 func (column *Column) addData(value string, rowIndex int) {
+	column.updateMinMax(value, rowIndex)
 	column.data = append(column.data, encodeValue(value)...)
+	column.rows++
 }
 
 func (column *Column) updateMinMax(value string, rowIndex int) {
@@ -29,34 +33,47 @@ func (column *Column) updateMinMax(value string, rowIndex int) {
 	}
 }
 
-func (column *Column) GetName() string {
+func (column *Column) getName() string {
 	return column.name
 }
 
-func (column *Column) GetMax() []byte {
+func (column *Column) getMax() []byte {
 	return encodeValue(column.max)
 }
 
-func (column *Column) GetMin() []byte {
+func (column *Column) getMin() []byte {
 	return encodeValue(column.min)
 }
 
-func (column *Column) GetTotalCompressedSize() int64 {
+func (column *Column) getTotalCompressedSize() int64 {
 	return column.totalCompressedSize
 }
 
-func (column *Column) GetTotalUncompressedSize() int64 {
+func (column *Column) getTotalUncompressedSize() int64 {
 	return column.totalUncompressedSize
 }
 
-func (column *Column) UpdateOffset(offset int64) {
+func (column *Column) updateOffset(offset int64) {
 	column.offset += offset
 }
 
-func (column *Column) GetOffset() int64 {
+func (column *Column) getOffset() int64 {
 	return column.offset
 }
 
-func (column *Column) GetRows() int64 {
+func (column *Column) getRows() int64 {
 	return int64(column.rows)
+}
+
+func encodeValue(value string) []byte {
+
+	lenBuffer := make([]byte, 4)
+	binary.LittleEndian.PutUint32(lenBuffer, uint32(len(value)))
+
+	var buffer []byte
+	buffer = append(buffer, lenBuffer...)
+	buffer = append(buffer, []byte(value)...)
+
+	return buffer
+
 }

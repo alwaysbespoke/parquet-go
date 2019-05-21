@@ -17,9 +17,9 @@ func (f *File) write() error {
 	lastSize := int64(4)
 	for i := 0; i < len(f.columns); i++ {
 		column := f.columns[i]
-		column.UpdateOffset(lastSize)
+		column.updateOffset(lastSize)
 		page := f.WritePage(i)
-		lastSize += column.GetTotalCompressedSize()
+		lastSize += column.getTotalCompressedSize()
 		buffer.Write(page)
 	}
 	f.totalSize = lastSize - 4
@@ -39,7 +39,7 @@ func (f *File) write() error {
 	buffer.WriteString("PAR1")
 
 	// write file
-	err := ioutil.WriteFile("datalake/"+f.Key+".parquet", buffer.Bytes(), 0644)
+	err := ioutil.WriteFile("datalake/"+f.key+".parquet", buffer.Bytes(), 0644)
 	return err
 
 }

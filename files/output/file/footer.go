@@ -52,7 +52,7 @@ func (f *File) newColumns() []*ColumnChunk {
 
 		var columnChunk ColumnChunk
 		columnChunk.FilePath = nil
-		columnChunk.FileOffset = column.GetOffset() // 4 for the first columnChunk
+		columnChunk.FileOffset = column.getOffset() // 4 for the first columnChunk
 		columnChunk.MetaData = column.newMetaData()
 		columnChunks = append(columnChunks, &columnChunk)
 
@@ -67,13 +67,13 @@ func (column *Column) newMetaData() *ColumnMetaData {
 	var columnMetaData ColumnMetaData
 	columnMetaData.Type = Type_BYTE_ARRAY
 	columnMetaData.Encodings = []Encoding{Encoding_RLE, Encoding_BIT_PACKED, Encoding_PLAIN}
-	columnMetaData.PathInSchema = []string{column.GetName()}
+	columnMetaData.PathInSchema = []string{column.getName()}
 	columnMetaData.Codec = CompressionCodec_UNCOMPRESSED
-	columnMetaData.NumValues = column.GetRows()
-	columnMetaData.TotalUncompressedSize = column.GetTotalCompressedSize() // change
-	columnMetaData.TotalCompressedSize = column.GetTotalUncompressedSize() // change
+	columnMetaData.NumValues = column.getRows()
+	columnMetaData.TotalUncompressedSize = column.getTotalCompressedSize() // change
+	columnMetaData.TotalCompressedSize = column.getTotalUncompressedSize() // change
 	columnMetaData.KeyValueMetadata = nil                                  // if empty it doesn't work (for some reason the example prints it empty)
-	columnMetaData.DataPageOffset = column.GetOffset()                     // change (4 for the first)
+	columnMetaData.DataPageOffset = column.getOffset()                     // change (4 for the first)
 	columnMetaData.IndexPageOffset = nil
 	columnMetaData.DictionaryPageOffset = nil
 	columnMetaData.Statistics = column.newStatistics()
@@ -85,8 +85,8 @@ func (column *Column) newMetaData() *ColumnMetaData {
 func (column *Column) newStatistics() *Statistics {
 
 	var statistics Statistics
-	statistics.Max = column.GetMax() // change
-	statistics.Min = column.GetMin() // change
+	statistics.Max = column.getMax() // change
+	statistics.Min = column.getMin() // change
 	statistics.NullCount = nil
 	statistics.DistinctCount = nil
 	return &statistics
@@ -112,7 +112,7 @@ func (f *File) newSchema() []*SchemaElement {
 		scale := int32(0)
 		precision := int32(0)
 		fieldID := int32(0)
-		element := newSchemaElement(column.GetName(), nil, &t, &typeLength, &scale, &precision, &fieldID, false)
+		element := newSchemaElement(column.getName(), nil, &t, &typeLength, &scale, &precision, &fieldID, false)
 		schema = append(schema, element)
 
 	}

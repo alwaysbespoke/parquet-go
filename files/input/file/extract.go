@@ -8,17 +8,14 @@ import (
 )
 
 func (f *File) extract() error {
-
 	var err error
 	f.extractData, err = gzip.NewReader(bytes.NewBuffer(f.loadData))
 	if err != nil {
 		log.Log(log.ERROR, err.Error(), log.Fields{
-			"file-name": f.Key,
+			"file-name": f.key,
 		})
 		return err
 	}
 	defer f.extractData.Close()
-
 	return err
-
 }

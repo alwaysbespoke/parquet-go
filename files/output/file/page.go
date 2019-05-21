@@ -33,7 +33,7 @@ func (f *File) WritePage(columnIndex int) []byte {
 
 	// create dataPageHeader
 	var dataPageHeader DataPageHeader
-	dataPageHeader.NumValues = int32(f.rows)
+	dataPageHeader.NumValues = column.rows
 	dataPageHeader.Encoding = Encoding_PLAIN
 	dataPageHeader.DefinitionLevelEncoding = Encoding_RLE
 	dataPageHeader.RepetitionLevelEncoding = Encoding_RLE

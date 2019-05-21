@@ -11,20 +11,16 @@ const (
 )
 
 func (f *File) read() error {
-
 	reader := csv.NewReader(f.extractData)
 	reader.Comma = TAB
 	reader.FieldsPerRecord = -1
-
 	var err error
 	f.readData, err = reader.ReadAll()
 	if err != nil {
 		log.Log(log.ERROR, err.Error(), log.Fields{
-			"file-name": f.Key,
+			"file-name": f.key,
 		})
 		return err
 	}
-
 	return err
-
 }
