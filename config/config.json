@@ -1,9 +1,9 @@
 {
-    "batch":true,
-    "fileName":"E323VQ75RY6VB4.2019-03-23-01.2b953935.gz",
+    "batch":false,
+    "fileName":"E323VQ75RY6VB4.2019-02-01-00.0a0f5d3b.gz",
     "dates": {
         "start":"2019-04-01",
         "end":"2019-04-30"
     },
-    "benchmark":false
+    "benchmark":true
 }

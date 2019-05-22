@@ -1,7 +1,6 @@
 package input
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	log "github.com/alwaysbespoke/jlog"
@@ -9,6 +8,10 @@ import (
 	"github.com/alwaysbespoke/parquet-go/files/input/file"
 	"github.com/alwaysbespoke/parquet-go/files/output"
 	"github.com/alwaysbespoke/parquet-go/utils"
+)
+
+const (
+	FILES_DIR = "./cf"
 )
 
 type Input struct {
@@ -51,7 +54,7 @@ func (in *Input) Process() error {
 func (in *Input) processBatch() error {
 
 	// list directory
-	fileObjs, err := ioutil.ReadDir("./cf")
+	fileObjs, err := ioutil.ReadDir(FILES_DIR)
 	if err != nil {
 		log.Log(log.ERROR, err.Error(), nil)
 		return err
@@ -111,8 +114,6 @@ func (in *Input) processFile(key string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(f.Key)
-
 	return nil
 
 }

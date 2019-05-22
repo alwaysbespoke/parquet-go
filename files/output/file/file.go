@@ -1,5 +1,9 @@
 package file
 
+import (
+	"github.com/alwaysbespoke/parquet-go/schema"
+)
+
 type File struct {
 	key       string
 	columns   []*Column
@@ -8,7 +12,13 @@ type File struct {
 }
 
 func New(key string) *File {
-	columns := make([]*Column, 26)
+
+	var columns []*Column
+	outputSchema := schema.GetOutputSchema()
+	for i := 0; i < len(outputSchema); i++ {
+		column := NewColumn(outputSchema[i])
+		columns = append(columns, column)
+	}
 	return &File{key, columns, 0, 0}
 }
 
@@ -17,13 +27,15 @@ func (f *File) Process(row []string) {
 	//
 	// basic -> add data to column
 	for i := 0; i < len(row); i++ {
+
 		data := row[i]
 		column := f.columns[i]
-		column.addData(data, 0)
+		var isFirstRow bool
+		if len(column.data) == 0 {
+			isFirstRow = true
+		}
+		column.addData(data, isFirstRow)
+
 	}
 	f.rows++
-}
-
-func (f *File) Flush(key string) {
-	f.write()
 }

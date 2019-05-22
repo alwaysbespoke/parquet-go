@@ -1,6 +1,8 @@
 package file
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+)
 
 type Column struct {
 	name                  string
@@ -13,14 +15,19 @@ type Column struct {
 	offset                int64
 }
 
-func (column *Column) addData(value string, rowIndex int) {
-	column.updateMinMax(value, rowIndex)
+func NewColumn(name string) *Column {
+	return &Column{name, []byte{}, "", "", 0, 0, 0, 0}
+}
+
+func (column *Column) addData(value string, isFirstRow bool) {
+	//fmt.Println(value)
+	column.updateMinMax(value, isFirstRow)
 	column.data = append(column.data, encodeValue(value)...)
 	column.rows++
 }
 
-func (column *Column) updateMinMax(value string, rowIndex int) {
-	if rowIndex == 2 {
+func (column *Column) updateMinMax(value string, isFirstRow bool) {
+	if isFirstRow {
 		column.max = value
 		column.min = value
 	} else {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	log "bitbucket.org/bitcentral/fuel-analytics-logparser-local/jlog"
+	log "github.com/alwaysbespoke/jlog"
 )
 
 type Config struct {
@@ -21,9 +21,9 @@ const (
 
 var c Config
 
-func Load() error {
+func Process() error {
 
-	log.Log(log.INFO, "Loading configuration file", log.Fields{
+	log.Log(log.INFO, "Processing configuration file", log.Fields{
 		"file": FILE,
 	})
 

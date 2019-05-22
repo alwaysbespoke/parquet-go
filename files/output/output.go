@@ -13,7 +13,6 @@ func New() *Output {
 }
 
 func (out *Output) Process(key string, row []string) {
-
 	f, ok := out.files[key]
 	if ok {
 		f.Process(row)
@@ -21,5 +20,12 @@ func (out *Output) Process(key string, row []string) {
 	}
 	out.files[key] = file.New(key)
 	out.files[key].Process(row)
+}
+
+func (out *Output) Flush() {
+
+	for key, file := range out.files {
+		file.Write(key)
+	}
 
 }

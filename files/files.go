@@ -19,6 +19,8 @@ func (fs *Files) Process() error {
 	in := input.New(out)
 	in.Process()
 
+	out.Flush()
+
 	return nil
 
 }

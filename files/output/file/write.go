@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-func (f *File) write() error {
+func (f *File) Write(fileName string) error {
 
 	var buffer bytes.Buffer
 
@@ -39,7 +39,7 @@ func (f *File) write() error {
 	buffer.WriteString("PAR1")
 
 	// write file
-	err := ioutil.WriteFile("datalake/"+f.key+".parquet", buffer.Bytes(), 0644)
+	err := ioutil.WriteFile("datalake/"+fileName+".parquet", buffer.Bytes(), 0644)
 	return err
 
 }
