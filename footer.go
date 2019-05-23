@@ -1,4 +1,4 @@
-package file
+package parquet
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
-func (f *File) WriteFooter() []byte {
+func (f *File) writeFooter() []byte {
 
 	var fileMetaData FileMetaData
 	fileMetaData.Version = int32(1)
@@ -34,7 +34,7 @@ func (f *File) newRowGroups() []*RowGroup {
 
 	var rowGroup RowGroup
 	rowGroup.Columns = f.newColumns()
-	rowGroup.TotalByteSize = f.totalSize // change
+	rowGroup.TotalByteSize = f.totalSize
 	rowGroup.NumRows = int64(f.rows)
 	rowGroup.SortingColumns = nil // if empty it doesn't work (for some reason the example prints it empty)
 	rowGroups = append(rowGroups, &rowGroup)
@@ -70,14 +70,14 @@ func (column *Column) newMetaData() *ColumnMetaData {
 	columnMetaData.PathInSchema = []string{column.getName()}
 	columnMetaData.Codec = CompressionCodec_UNCOMPRESSED
 	columnMetaData.NumValues = column.getRows()
-	columnMetaData.TotalUncompressedSize = column.getTotalCompressedSize() // change
-	columnMetaData.TotalCompressedSize = column.getTotalUncompressedSize() // change
-	columnMetaData.KeyValueMetadata = nil                                  // if empty it doesn't work (for some reason the example prints it empty)
-	columnMetaData.DataPageOffset = column.getOffset()                     // change (4 for the first)
+	columnMetaData.TotalUncompressedSize = column.getTotalCompressedSize()
+	columnMetaData.TotalCompressedSize = column.getTotalUncompressedSize()
+	columnMetaData.KeyValueMetadata = nil              // if empty it doesn't work (for some reason the example prints it empty)
+	columnMetaData.DataPageOffset = column.getOffset() // 4 for the first
 	columnMetaData.IndexPageOffset = nil
 	columnMetaData.DictionaryPageOffset = nil
 	columnMetaData.Statistics = column.newStatistics()
-	columnMetaData.EncodingStats = nil // if empty it doesn't align (for some reason the example prints it empty)
+	columnMetaData.EncodingStats = nil // if empty it doesn't work (for some reason the example prints it empty)
 	return &columnMetaData
 
 }
@@ -85,8 +85,8 @@ func (column *Column) newMetaData() *ColumnMetaData {
 func (column *Column) newStatistics() *Statistics {
 
 	var statistics Statistics
-	statistics.Max = column.getMax() // change
-	statistics.Min = column.getMin() // change
+	statistics.Max = column.getMax()
+	statistics.Min = column.getMin()
 	statistics.NullCount = nil
 	statistics.DistinctCount = nil
 	return &statistics

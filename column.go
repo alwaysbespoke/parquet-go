@@ -1,4 +1,4 @@
-package file
+package parquet
 
 import (
 	"encoding/binary"
@@ -15,12 +15,11 @@ type Column struct {
 	offset                int64
 }
 
-func NewColumn(name string) *Column {
+func newColumn(name string) *Column {
 	return &Column{name, []byte{}, "", "", 0, 0, 0, 0}
 }
 
 func (column *Column) addData(value string, isFirstRow bool) {
-	//fmt.Println(value)
 	column.updateMinMax(value, isFirstRow)
 	column.data = append(column.data, encodeValue(value)...)
 	column.rows++

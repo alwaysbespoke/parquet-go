@@ -1,4 +1,4 @@
-package file
+package parquet
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
-func (f *File) WritePage(columnIndex int) []byte {
+func (f *File) writePage(columnIndex int) []byte {
 
 	column := f.columns[columnIndex]
 

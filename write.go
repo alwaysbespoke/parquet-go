@@ -1,12 +1,11 @@
-package file
+package parquet
 
 import (
 	"bytes"
 	"encoding/binary"
-	"io/ioutil"
 )
 
-func (f *File) Write(fileName string) error {
+func (f *File) write() []byte {
 
 	var buffer bytes.Buffer
 
@@ -18,17 +17,15 @@ func (f *File) Write(fileName string) error {
 	for i := 0; i < len(f.columns); i++ {
 		column := f.columns[i]
 		column.updateOffset(lastSize)
-		page := f.WritePage(i)
+		page := f.writePage(i)
 		lastSize += column.getTotalCompressedSize()
 		buffer.Write(page)
 	}
 	f.totalSize = lastSize - 4
 
 	// write footer
-	footer := f.WriteFooter()
+	footer := f.writeFooter()
 	buffer.Write(footer)
-
-	//fmt.Println(footer)
 
 	// write footer size
 	footerSizeBuf := make([]byte, 4)
@@ -38,8 +35,6 @@ func (f *File) Write(fileName string) error {
 	// write version
 	buffer.WriteString("PAR1")
 
-	// write file
-	err := ioutil.WriteFile("datalake/"+fileName+".parquet", buffer.Bytes(), 0644)
-	return err
+	return buffer.Bytes()
 
 }

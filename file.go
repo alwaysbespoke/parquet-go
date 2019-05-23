@@ -1,8 +1,4 @@
-package file
-
-import (
-	"github.com/alwaysbespoke/parquet-go/schema"
-)
+package parquet
 
 type File struct {
 	key       string
@@ -11,21 +7,18 @@ type File struct {
 	totalSize int64
 }
 
-func New(key string) *File {
+func New(schema []string, key string) *File {
 
 	var columns []*Column
-	outputSchema := schema.GetOutputSchema()
-	for i := 0; i < len(outputSchema); i++ {
-		column := NewColumn(outputSchema[i])
+	for i := 0; i < len(schema); i++ {
+		column := newColumn(schema[i])
 		columns = append(columns, column)
 	}
 	return &File{key, columns, 0, 0}
 }
 
 func (f *File) Process(row []string) {
-	// advanced -> add data to page within columnChunk within rowGroup
-	//
-	// basic -> add data to column
+
 	for i := 0; i < len(row); i++ {
 
 		data := row[i]
@@ -38,4 +31,9 @@ func (f *File) Process(row []string) {
 
 	}
 	f.rows++
+
+}
+
+func (f *File) Flush() []byte {
+	return f.write()
 }
