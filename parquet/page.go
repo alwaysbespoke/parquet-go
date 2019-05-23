@@ -60,9 +60,10 @@ func (f *File) writePage(columnIndex int) []byte {
 	column.totalCompressedSize = int64(len(responseBuffer))
 	column.totalUncompressedSize = int64(len(responseBuffer))
 
-	//fmt.Println()
-	//fmt.Printf("%+v\n", header)
-	//fmt.Println(responseBuffer)
+	// print out struct
+	// fmt.Println()
+	// fmt.Printf("%+v\n", header)
+	// fmt.Println(responseBuffer)
 
 	return responseBuffer
 

@@ -11,7 +11,7 @@ func (f *File) writeFooter() []byte {
 	var fileMetaData FileMetaData
 	fileMetaData.Version = int32(1)
 	fileMetaData.Schema = f.newSchema()
-	fileMetaData.NumRows = int64(f.rows)
+	fileMetaData.NumRows = f.rows
 	fileMetaData.RowGroups = f.newRowGroups()
 	fileMetaData.KeyValueMetadata = nil // if empty it doesn't work (for some reason the example prints it empty)
 	fileMetaData.CreatedBy = nil
@@ -21,8 +21,9 @@ func (f *File) writeFooter() []byte {
 	ts.Protocol = thrift.NewTCompactProtocolFactory().GetProtocol(ts.Transport)
 	footerBuf, _ := ts.Write(context.TODO(), &fileMetaData)
 
-	//fmt.Println()
-	//fmt.Printf("%+v\n", fileMetaData)
+	// print out struct
+	// fmt.Println()
+	// fmt.Printf("%+v\n", fileMetaData)
 
 	return footerBuf
 
@@ -35,7 +36,7 @@ func (f *File) newRowGroups() []*RowGroup {
 	var rowGroup RowGroup
 	rowGroup.Columns = f.newColumns()
 	rowGroup.TotalByteSize = f.totalSize
-	rowGroup.NumRows = int64(f.rows)
+	rowGroup.NumRows = f.rows
 	rowGroup.SortingColumns = nil // if empty it doesn't work (for some reason the example prints it empty)
 	rowGroups = append(rowGroups, &rowGroup)
 	return rowGroups

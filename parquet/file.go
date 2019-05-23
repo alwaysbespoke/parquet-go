@@ -1,20 +1,19 @@
 package parquet
 
 type File struct {
-	key       string
 	columns   []*Column
-	rows      int
+	rows      int64
 	totalSize int64
 }
 
-func New(schema []string, key string) *File {
+func New(schema []string) *File {
 
 	var columns []*Column
 	for i := 0; i < len(schema); i++ {
 		column := newColumn(schema[i])
 		columns = append(columns, column)
 	}
-	return &File{key, columns, 0, 0}
+	return &File{columns, 0, 0}
 }
 
 func (f *File) Process(row []string) {
