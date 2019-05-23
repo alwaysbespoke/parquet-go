@@ -13,15 +13,18 @@ func (f *File) write() []byte {
 	buffer.WriteString("PAR1")
 
 	// write pages
-	lastSize := int64(4)
+	totalSize := int64(4)
 	for i := 0; i < len(f.columns); i++ {
+		// update offset
 		column := f.columns[i]
-		column.updateOffset(lastSize)
+		column.updateOffset(totalSize)
+		// write page
 		page := f.writePage(i)
-		lastSize += column.getTotalCompressedSize()
 		buffer.Write(page)
+		// update totalSize
+		totalSize += column.getTotalCompressedSize()
 	}
-	f.totalSize = lastSize - 4
+	f.totalSize = totalSize - 4
 
 	// write footer
 	footer := f.writeFooter()
