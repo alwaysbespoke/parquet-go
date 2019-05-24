@@ -38,6 +38,9 @@ func (f *File) write() []byte {
 	// write version
 	buffer.WriteString("PAR1")
 
+	// free up memory
+	f.columns = nil
+
 	return buffer.Bytes()
 
 }
